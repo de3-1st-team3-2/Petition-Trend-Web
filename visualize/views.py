@@ -27,3 +27,10 @@ def congress_chart(request):
 
     context = {'posts': view_ordered_posts}
     return render(request, "chart/charts_congress.html", context)
+
+def cw24_chart(request):
+    view_ordered_posts = CW24.objects.order_by("-views")[:10]
+
+    context = {'posts': view_ordered_posts}
+    return render(request, "chart/charts_cw24.html", context)
+  
