@@ -2,14 +2,13 @@ from django.db import models
 
 # Create your models here.
 
-class Epeople(models.Model):
+class Ideaseoul(models.Model):
     title = models.CharField(max_length=50, verbose_name="제목")
-    url = models.CharField(max_length=100, verbose_name="URL")
-    agency = models.CharField(max_length=10, verbose_name="처리기관")
-    pub_date = models.DateTimeField(verbose_name="작성일")
+    link = models.CharField(max_length=100, verbose_name="URL")
+    date = models.DateTimeField(verbose_name="작성일")
     status = models.CharField(max_length=10, verbose_name="추진상황")
-    views = models.IntegerField(verbose_name="조회수")
-    rating = models.FloatField(verbose_name="평점")
+    views = models.CharField(max_length=50,verbose_name="조회수")
+    period = models.CharField(max_length=50,verbose_name="")
     field = models.CharField(max_length=50, verbose_name="분야")
     content = models.CharField(max_length=300, verbose_name="내용")
 
