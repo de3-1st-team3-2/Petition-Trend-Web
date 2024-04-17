@@ -18,10 +18,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from visualize.views import epeople_chart
+from visualize.views import *
 
 urlpatterns = [
-    path('', epeople_chart, name = 'home'),
+    path('', main_index),
+    path('epeople/', epeople_chart),
+    path('congress/', congress_chart),
     path('visualize/', include('visualize.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
