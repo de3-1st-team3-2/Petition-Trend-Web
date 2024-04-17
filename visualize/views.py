@@ -20,4 +20,4 @@ def epeople_chart(request):
         view_ordered_posts = Epeople.objects.order_by("-views")[:10]
 
     context = {'posts': view_ordered_posts}
-    return render(request, "chart/charts.html", context)
+    return render(request, "chart/epeople.html", context)
