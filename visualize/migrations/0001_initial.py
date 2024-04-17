@@ -26,4 +26,5 @@ class Migration(migrations.Migration):
                 ('content', models.CharField(max_length=300, verbose_name='내용')),
             ],
         ),
+
     ]
