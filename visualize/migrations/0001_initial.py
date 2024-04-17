@@ -27,16 +27,15 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Idea',
+            name='Ideaseoul',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=50, verbose_name='제목')),
                 ('url', models.CharField(max_length=100, verbose_name='URL')),
-                ('agency', models.CharField(max_length=10, verbose_name='처리기관')),
                 ('pub_date', models.DateTimeField(verbose_name='작성일')),
+                ('period', models.CharField(max_length=50, verbose_name="기간")),
                 ('status', models.CharField(max_length=10, verbose_name='추진상황')),
                 ('views', models.IntegerField(verbose_name='조회수')),
-                ('rating', models.FloatField(verbose_name='평점')),
                 ('field', models.CharField(max_length=50, verbose_name='분야')),
                 ('content', models.CharField(max_length=300, verbose_name='내용')),
             ],
