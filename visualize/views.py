@@ -33,7 +33,7 @@ def cw24_chart(request):
 
 def ideaseoul_chart(request):
     order_by = request.GET.get("order-by")
-    view_ordered_posts = Ideaseoul.objects.order_by("-rating")[:10]
+    view_ordered_posts = Ideaseoul.objects.order_by("-views")[:10]
 
     context = {'posts': view_ordered_posts}
     return render(request, "chart/charts_ideaseoul.html", context)
