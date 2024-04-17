@@ -7,5 +7,5 @@ urlpatterns = [
     path('epeople/', epeople_chart),
     path('congress/', congress_chart),
     path('cw24/', cw24_chart),
-    path('ideaseoul/', cw24_chart),
+    path('ideaseoul/', ideaseoul_chart),
 ]
