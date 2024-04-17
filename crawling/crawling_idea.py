@@ -55,5 +55,5 @@ for data in overall_data:
     data_list.append(temp)
 
 # JSON 파일로 저장
-with open('../idea_data.json', 'w', encoding='utf-8') as jsonfile:
+with open('idea_data.json', 'w', encoding='utf-8') as jsonfile:
     json.dump(data_list, jsonfile, ensure_ascii=False, indent=4)
