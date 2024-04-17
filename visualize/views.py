@@ -3,11 +3,7 @@ from .models import *
 from datetime import datetime
 
 def main_index(request):
-    order_by = request.GET.get("order-by")
-    view_ordered_posts = Congress.objects.order_by("-rating")[:10]
-
-    context = {'posts': view_ordered_posts}
-    return render(request, "chart/index.html", context)
+    return render(request, "chart/index.html")
 
 
 def epeople_chart(request):

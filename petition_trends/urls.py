@@ -22,8 +22,6 @@ from visualize.views import *
 
 urlpatterns = [
     path('', main_index),
-    path('epeople/', epeople_chart),
-    path('congress/', congress_chart),
-    path('visualize/', include('visualize.urls')),
+    path('', include('visualize.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
