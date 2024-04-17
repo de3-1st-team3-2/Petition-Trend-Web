@@ -18,7 +18,7 @@ def epeople_chart(request):
     else:
         view_ordered_posts = Epeople.objects.filter(pub_date__gte=current_month_start).order_by("-views")[:10]
 
-    context = {'posts': view_ordered_posts
+    context = {'posts': view_ordered_posts}
     return render(request, "chart/charts_epeople.html", context)
 
 def congress_chart(request):
