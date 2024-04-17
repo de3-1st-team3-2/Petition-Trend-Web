@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>국민 신문고 시각화</title>
+        <title>국민동의청원 시각화</title>
         <link rel="stylesheet" href="{% static 'css/styles.css' %}">
         <!-- <link href="css/styles.css" rel="stylesheet" /> -->
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -99,10 +99,10 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">국민 신문고 시각화</h1>
+                        <h1 class="mt-4">국민동의청원 시각화</h1>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                            <li class="breadcrumb-item active">국민 신문고</li>
+                            <li class="breadcrumb-item active">국민동의청원</li>
                         </ol>
                         <div class="card mb-4">
                             <div class="card-body">
@@ -156,8 +156,7 @@
                                             <th>분야</th>
                                             <th>작성일</th>
                                             <th>처리상태</th>
-                                            <th>조회수</th>
-                                            <th>별점</th>
+                                            <th>동의수</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -166,10 +165,9 @@
                                                 <tr>
                                                     <td><a href="{{post.url}}" style="text-decoration-line: none">{{post.title}}</a></td>
                                                     <td>{{post.agency}}</td>
-                                                    <td>{{post.field}}</td>
+                                                    <td>{{post.category}}</td>
                                                     <td>{{post.pub_date|date:"Y-m-d"}}</td>
                                                     <td>{{post.status}}</td>
-                                                    <td>{{post.views}}</td>
                                                     <td>{{post.rating}}</td>
                                                 </tr>
                                             {% endfor %}
