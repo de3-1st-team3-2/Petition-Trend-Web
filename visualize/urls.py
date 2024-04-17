@@ -8,4 +8,5 @@ urlpatterns = [
     path('congress/', congress_chart),
     path('cw24/', cw24_chart),
     path('ideaseoul/', ideaseoul_chart),
+    path('subthink/', subthink_chart),
 ]
