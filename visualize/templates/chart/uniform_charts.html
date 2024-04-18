@@ -154,7 +154,29 @@
         <script src="{% static 'js/scripts.js' %}"></script>
         <script src="{% static 'assets/demo/chart-area-demo.js' %}"></script>
         <script src="{% static 'assets/demo/chart-bar-demo.js' %}"></script>
-        <script src="{% static 'assets/demo/chart-pie-demo.js' %}"></script>
+        <!-- <script src="{% static 'assets/demo/chart-pie-demo.js' %}"></script> -->
         <script src="{% static 'js/datatables-simple-demo.js' %}"></script>
+
+        {{ pie_labels | json_script:"pie_labels"}}
+        {{ pie_datas | json_script:"pie_datas" }}
+        <script type="text/javascript">
+            Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+            Chart.defaults.global.defaultFontColor = '#292b2c';
+
+            var pie_labels = JSON.parse(document.getElementById('bar_labels').textContent);
+            var pie_datas = JSON.parse(document.getElementById('bar_datas').textContent);
+            // Pie Chart Example
+            var ctx = document.getElementById("myPieChart");
+            var myPieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: pie_labels,
+                datasets: [{
+                data: pie_datas,
+                backgroundColor: ['#007bff', '#dc3545', '#ffc107', '#28a745'],
+                }],
+            },
+            });
+        </script>
     </body>
 </html>
