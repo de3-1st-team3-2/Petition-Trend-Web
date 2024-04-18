@@ -5,9 +5,9 @@ import os
 
 
 subprocess.run(['python', 'crawlings\\crawling_idea.py'])
-
 subprocess.run(['python', 'crawlings\\epeople_scrapping.py'])
 subprocess.run(['python', 'crawlings\\petition_crwaling.py'])
+subprocess.run(['python', 'crawlings\\crawling_cw24.py'])
 
 def load_data(json_file):
 
@@ -20,3 +20,4 @@ def load_data(json_file):
 load_data('crawling_ideaseoul.json')
 load_data('crawling_epeople.json')
 load_data('crawling_petition.json')
+load_data('crawling_cw24.json')
