@@ -49,8 +49,8 @@ def set_search_period(driver, start_date, end_date):
     start_date_input = driver.find_element(By.ID, "rqstStDt")
     end_date_input = driver.find_element(By.ID, "rqstEndDt")
 
-    ActionChains(driver).send_keys_to_element(start_date_input, start_date.strftime("%Y-%m-%d")).perform()
-    ActionChains(driver).send_keys_to_element(end_date_input, end_date.strftime("%Y-%m-%d")).perform()
+    ActionChains(driver).send_keys_to_element(start_date_input, start_date_str).perform()
+    ActionChains(driver).send_keys_to_element(end_date_input, end_date_str).perform()
 
     date_search_btn = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.CLASS_NAME, "btn.black"))
