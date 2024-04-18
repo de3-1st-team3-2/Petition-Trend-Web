@@ -49,7 +49,7 @@ final_index=int(final_index.split("=")[-1])
 #page_index번쨰 페이지  post_count번째 글
 #page_index*9+post_count-1번째 글
 #page_index*9+post_count-2 가 dict 위치
-for page_index in range(1, final_index+1):
+for page_index in range(1, 3):
 #     print (page_index,'페이지')
     res=requests.get(f"https://cheongwon.go.kr/portal/petition/open/view?pageIndex={page_index}&searchType=1&searchKeyword=&type=list",headers=header)
     soup=bs(res.text,"html.parser")
