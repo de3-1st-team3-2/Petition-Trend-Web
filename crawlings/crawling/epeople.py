@@ -246,4 +246,4 @@ if __name__ == "__main__":
         total_list.append(new_dict)
     import json
     with open(f"./crawling_epeople.json", "w", encoding='utf-8') as f:
-        json.dump(new_dict, f, ensure_ascii=False, indent=4)
+        json.dump(total_list, f, ensure_ascii=False, indent=4)
