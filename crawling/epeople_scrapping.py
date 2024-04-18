@@ -87,7 +87,7 @@ def epeople_list_crawling(start_date, end_date):
         driver.implicitly_wait(10)
 
         set_search_period(driver, start_date, end_date)
-        time.sleep(0.5)
+        time.sleep(0.1)
 
         last_page = find_last_page_num(driver)
         for _ in tqdm(range(0, last_page)):
@@ -99,7 +99,7 @@ def epeople_list_crawling(start_date, end_date):
                 EC.element_to_be_clickable((By.CLASS_NAME, "nep_p_next"))
             )
             ActionChains(driver).click(next_page_btn).perform()
-            time.sleep(0.5)
+            time.sleep(0.1)
         
     return total_data_dict
 
@@ -126,14 +126,14 @@ def reply_crawling(driver, target_url):
     """
     driver.get(target_url)
     driver.implicitly_wait(20)
-    time.sleep(1)
+    time.sleep(0.1)
 
     total_reply_dict = {}
     try:
         total_reply_dict["댓글 수"] = int(driver.find_element(By.ID, "replyTotalCnt").text)
     except Exception as e:
         print(e)
-        time.sleep(1)
+        time.sleep(0.1)
         
     replies = driver.find_element(By.ID, "replyListUl").find_elements(By.TAG_NAME, "li")
     reply_dict_lst = []
@@ -150,7 +150,7 @@ def reply_crawling(driver, target_url):
                 EC.element_to_be_clickable((By.CLASS_NAME, "rereply"))
             )
             ActionChains(driver).click(button).perform()
-            time.sleep(0.5)
+            time.sleep(0.1)
 
             reReplies = reply.find_element(By.CLASS_NAME, f"re_reply").find_elements(By.TAG_NAME, "li")
             for reReply in reReplies:
@@ -221,15 +221,13 @@ def epeople_crawling(start_date, end_date):
 
 if __name__ == "__main__":
     end_date = datetime(2024, 4, 13)
-    start_date = datetime(2024, 1, 1)
+    start_date = datetime(2024, 4, 12)
 
     crawling_result_dict = epeople_crawling(start_date, end_date)
     
     start_date_str = start_date.strftime("%Y-%m-%d")
     end_date_str = end_date.strftime("%Y-%m-%d")
-    import json
-    with open(f"./crawling_data_{start_date_str}_{end_date_str}.json", "w", encoding='utf-8') as f:
-        json.dump(crawling_result_dict, f, ensure_ascii=False, indent=4)
+
     
 
     total_list = []
@@ -246,3 +244,6 @@ if __name__ == "__main__":
         new_dict['fields']['field'] = v['분야']
         new_dict['fields']['content'] = v['내용']
         total_list.append(new_dict)
+    import json
+    with open(f"./crawling_data_{start_date_str}_{end_date_str}.json", "w", encoding='utf-8') as f:
+        json.dump(crawling_result_dict, f, ensure_ascii=False, indent=4)
