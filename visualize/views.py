@@ -134,16 +134,54 @@ def search_result(request):
     title = request.GET.get('title')
     s_date = request.GET.get('s_date')
     e_date = request.GET.get('e_date')
-    title_list = Congress.objects.filter(title__contains=title)
+    site1 = request.GET.get('site1')
+    site2 = request.GET.get('site2')
+    site3 = request.GET.get('site3')
+    site4 = request.GET.get('site4')
+    site5 = request.GET.get('site5')
 
-    title_list = title_list.filter(pub_date__range=[s_date, e_date])
+    f_list = []
+    if site1:
+        title_list = Epeople.objects.filter(title__contains=title, pub_date__range=[s_date, e_date]).values('title', 'pub_date', 'url')
+        for da in title_list:
+            da['where'] = '국민 신문고'
+            f_list.append(da)
 
-    title_list = title_list.order_by("-pub_date")
+    if site2:
+        title_list = Congress.objects.filter(title__contains=title, pub_date__range=[s_date, e_date]).values('title', 'pub_date', 'url')
+        for da in title_list:
+            da['where'] = '국민동의청원'
+            f_list.append(da)
+
+    if site3:
+        title_list = CW24.objects.filter(title__contains=title, pub_date__range=[s_date, e_date]).values('title', 'pub_date', 'url')
+        for da in title_list:
+            da['where'] = '청원24'
+            f_list.append(da)
+
+    if site4:
+        title_list = Ideaseoul.objects.filter(title__contains=title, pub_date__range=[s_date, e_date]).values('title', 'pub_date', 'url')
+        for da in title_list:
+            da['where'] = '상상대로 서울'
+            f_list.append(da)
+
+    if site5:
+        title_list = SubThink.objects.filter(title__contains=title, pub_date__range=[s_date, e_date]).values('title', 'pub_date', 'url')
+        for da in title_list:
+            da['where'] = '국민 생각함'
+            f_list.append(da)
+
+    f_list = sorted(f_list, key=lambda x: x['pub_date'], reverse=True)
 
     context = {
         'title' : title,
-        'posts': title_list,
+        'posts': f_list,
         'current_date' : e_date,
-        'year_date' : s_date
+        'year_date' : s_date,
+        'site1' : site1,
+        'site2' : site2,
+        'site3' : site3,
+        'site4' : site4,
+        'site5' : site5
     }
     return render(request, "chart/search_result.html", context)
