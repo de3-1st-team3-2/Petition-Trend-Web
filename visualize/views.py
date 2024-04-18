@@ -28,7 +28,11 @@ def epeople_chart(request):
         result_lst.append(elem.rating)
         view_ordered_posts_lst.append(result_lst)
 
-    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고'}
+    context = {'columns' : columns, 
+               'posts': view_ordered_posts_lst, 
+               'site_name': '국민 신문고',
+               'bar_labels': ["5월", "6월", "7월", "8월", "9월"],
+               'bar_datas': [2,4,1,5,2]}
     return render(request, "chart/uniform_charts.html", context)
 
 def congress_chart(request):
