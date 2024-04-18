@@ -64,7 +64,10 @@ def cw24_chart(request):
         result_lst.append(elem.agency)
         result_lst.append(elem.status)
         result_lst.append(elem.pub_date.strftime("%Y-%m-%d"))
-        result_lst.append(f"{elem.start_date.strftime("%Y-%m-%d")} ~ {elem.end_date.strftime("%Y-%m-%d")}")
+        
+        start_date_str = elem.start_date.strftime("%Y-%m-%d")
+        end_date_str = elem.end_date.strftime("%Y-%m-%d")
+        result_lst.append(f"{start_date_str} ~ {end_date_str}")
         result_lst.append(elem.views)
         result_lst.append(elem.comment_num)
         view_ordered_posts_lst.append(result_lst)
@@ -103,7 +106,9 @@ def subthink_chart(request):
         result_lst = []
         result_lst.append((elem.title, elem.url))
         result_lst.append(elem.pub_date.strftime("%Y-%m-%d"))
-        result_lst.append(f"{elem.start_date.strftime("%Y-%m-%d")} ~ {elem.end_date.strftime("%Y-%m-%d")}")
+        start_date_str = elem.start_date.strftime("%Y-%m-%d")
+        end_date_str = elem.end_date.strftime("%Y-%m-%d")
+        result_lst.append(f"{start_date_str} ~ {end_date_str}")
         result_lst.append(elem.participants)
         result_lst.append(f"{elem.recommends}/{elem.no_recommends}")
         participants_ordered_posts_lst.append(result_lst)
