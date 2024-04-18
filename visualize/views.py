@@ -137,21 +137,35 @@ def search_result(request):
     site1 = request.GET.get('site1')
     site2 = request.GET.get('site2')
     site3 = request.GET.get('site3')
+    site4 = request.GET.get('site4')
+    site5 = request.GET.get('site5')
 
     f_list = []
     if site1:
+        title_list = Epeople.objects.filter(title__contains=title, pub_date__range=[s_date, e_date]).values('title', 'pub_date', 'url')
+        for da in title_list:
+            da['where'] = '국민 신문고'
+            f_list.append(da)
+
+    if site2:
         title_list = Congress.objects.filter(title__contains=title, pub_date__range=[s_date, e_date]).values('title', 'pub_date', 'url')
         for da in title_list:
             da['where'] = '국민동의청원'
             f_list.append(da)
 
-    if site2:
+    if site3:
         title_list = CW24.objects.filter(title__contains=title, pub_date__range=[s_date, e_date]).values('title', 'pub_date', 'url')
         for da in title_list:
             da['where'] = '청원24'
             f_list.append(da)
 
-    if site3:
+    if site4:
+        title_list = Ideaseoul.objects.filter(title__contains=title, pub_date__range=[s_date, e_date]).values('title', 'pub_date', 'url')
+        for da in title_list:
+            da['where'] = '상상대로 서울'
+            f_list.append(da)
+
+    if site5:
         title_list = SubThink.objects.filter(title__contains=title, pub_date__range=[s_date, e_date]).values('title', 'pub_date', 'url')
         for da in title_list:
             da['where'] = '국민 생각함'
@@ -166,6 +180,8 @@ def search_result(request):
         'year_date' : s_date,
         'site1' : site1,
         'site2' : site2,
-        'site3' : site3
+        'site3' : site3,
+        'site4' : site4,
+        'site5' : site5
     }
     return render(request, "chart/search_result.html", context)

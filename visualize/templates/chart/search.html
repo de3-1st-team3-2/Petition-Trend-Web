@@ -79,12 +79,11 @@
                             </label>
                             <br>
                             <label>사이트 :</label>
-                            <input type="checkbox" id="site1" name="site1" value="국민동의청원" checked>
-                            <label>국민동의청원</label>
-                            <input type="checkbox" id="site2" name="site2" value="청원24" checked>
-                            <label>청원24</label>
-                            <input type="checkbox" id="site3" name="site3" value="국민 생각함" checked>
-                            <label>국민 생각함</label>
+                            <label><input type="checkbox" id="site1" name="site1" {% if site1 %}checked{%endif%}> 국민 신문고</label>
+                            <label><input type="checkbox" id="site2" name="site2" {% if site2 %}checked{%endif%}> 국민동의청원</label>
+                            <label><input type="checkbox" id="site3" name="site3" {% if site3 %}checked{%endif%}> 청원24</label>
+                            <label><input type="checkbox" id="site4" name="site4" {% if site4 %}checked{%endif%}> 상상대로 서울</label>
+                            <label><input type="checkbox" id="site5" name="site5" {% if site5 %}checked{%endif%}> 국민 생각함</label>
                             <label><input type="submit" value="검색"></label>
                         </form>
                     </div>
