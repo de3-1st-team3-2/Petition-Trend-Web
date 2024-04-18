@@ -108,7 +108,9 @@
                                 <i class="fas fa-table me-1"></i>
                                 최근 인기글
                             </div>
+                            
                             <div class="card-body">
+                                {% if posts %}
                                 <table id="datatablesSimple">
                                     <thead>
                                         <tr>
@@ -120,7 +122,6 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% if posts %}
                                             {% for post in posts %}
                                                 <tr>
                                                     <td><a href="{{post.0.1}}" style="text-decoration-line: none">{{post.0.0}}</a></td>
@@ -129,11 +130,11 @@
                                                     {% endfor %}
                                                 </tr>
                                             {% endfor %}
-                                        {% else %}
-                                            <tr><p>아직 해당 사이트에 존재하는 청원글이 없습니다. </p></tr>
-                                        {% endif %}
                                     </tbody>
                                 </table>
+                                {% else %}
+                                    <p>아직 해당 사이트에 존재하는 청원글이 없습니다. </p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
