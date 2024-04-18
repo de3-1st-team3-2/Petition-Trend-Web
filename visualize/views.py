@@ -37,3 +37,9 @@ def ideaseoul_chart(request):
 
     context = {'posts': view_ordered_posts}
     return render(request, "chart/charts_ideaseoul.html", context)
+
+def subthink_chart(request):
+    participants_ordered_posts = SubThink.objects.order_by("-participants")[:10]
+
+    context = {'posts': participants_ordered_posts}
+    return render(request, "chart/charts_subthink.html", context)
