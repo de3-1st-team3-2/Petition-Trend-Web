@@ -63,29 +63,60 @@
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">Dashboard</h1>
+                        <h1 class="mt-4">검색결과</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">Dashboard</li>
+                            <li class="breadcrumb-item"><a href="/">메인</a></li>
+                            <li class="breadcrumb-item"><a href="/search">검색</a></li>
+                            <li class="breadcrumb-item active">검색결과</li>
                         </ol>
-                        <div class="row">
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-area me-1"></i>
-                                        Area Chart Example
-                                    </div>
-                                    <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
-                                </div>
-                            </div>
-                            <div class="col-xl-6">
-                                <div class="card mb-4">
-                                    <div class="card-header">
-                                        <i class="fas fa-chart-bar me-1"></i>
-                                        Bar Chart Example
-                                    </div>
-                                    <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
-                                </div>
-                            </div>
+                    </div>
+                    <br>
+                    <div class="container-fluid px-4">
+                        <form action="/search/result" method="get">
+                            <label>제목 <input type="text" id="title" name="title" value="{{title}}"></label>
+                            <label>기간
+                                <input type="date" id="s_date" name="s_date" value="{{year_date}}">
+                                <input type="date" id="e_date" name="e_date" value="{{current_date}}">
+                            </label>
+                            <label><input type="submit" value="검색"></label>
+                        </form>
+                    </div>
+                    <br>
+                    <div class="container-fluid px-4">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                            <i class="fas fa-table me-1"></i>
+                            검색 결과
+                        </div>
+                        <div class="card-body">
+                            {% if posts %}
+                            <table id="datatablesSimple">
+                                <thead>
+                                    <tr>
+                                        <th>제목</th>
+                                        <th>처리기관</th>
+                                        <th>분야</th>
+                                        <th>작성일</th>
+                                        <th>처리상태</th>
+                                        <th>동의수</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for post in posts %}
+                                        <tr>
+                                            <td><a href="{{post.url}}" style="text-decoration-line: none">{{post.title}}</a></td>
+                                            <td>{{post.agency}}</td>
+                                            <td>{{post.category}}</td>
+                                            <td>{{post.pub_date|date:"Y-m-d"}}</td>
+                                            <td>{{post.status}}</td>
+                                            <td>{{post.rating}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% else %}
+                                <tr><p>조건에 해당하는 청원이 존재하지 않습니다. </p></tr>
+                            {% endif %}            
                         </div>
                     </div>
                 </main>

@@ -22,10 +22,6 @@ class Congress(models.Model):
     rating = models.IntegerField(verbose_name="동의수")
     category = models.CharField(max_length=20, verbose_name="분야")
 
-    def __str__(self):
-        return f"제목: {self.title}, 작성일: {self.pub_date}, 추진상황: {self.status}"
-
-
 class Ideaseoul(models.Model):
     title = models.CharField(max_length=50, verbose_name="제목")
     url = models.CharField(max_length=100, verbose_name="URL")
@@ -35,8 +31,6 @@ class Ideaseoul(models.Model):
     views = models.IntegerField(verbose_name="조회수")
     field = models.CharField(max_length=50, verbose_name="분야")
     content = models.CharField(max_length=300, verbose_name="내용")
-    def __str__(self):
-        return f"제목: {self.title}, 작성일: {self.pub_date}, 추진상황: {self.status}"
 
 class CW24(models.Model):
     title = models.CharField(max_length=50, verbose_name="제목")
@@ -50,9 +44,6 @@ class CW24(models.Model):
     content = models.CharField(null = True, max_length=300, verbose_name="내용")
     comment_num = models.IntegerField(null = True, verbose_name="댓글수")
     result = models.CharField(max_length=300, null = True, verbose_name="처리결과")
-
-    def __str__(self):
-        return f"제목: {self.title}, 작성일: {self.pub_date}, 추진상황: {self.status}"
     
 class SubThink(models.Model):
     title = models.CharField(max_length=50, verbose_name="제목")
@@ -63,7 +54,3 @@ class SubThink(models.Model):
     participants = models.IntegerField(null = True, verbose_name="참여자수")
     recommends = models.IntegerField(null = True, verbose_name="추천수")
     no_recommends = models.IntegerField(null = True, verbose_name="비추천수")
-
-    def __str__(self):
-        return f"제목: {self.title}, 작성일: {self.pub_date}, 추진상황: {self.status}"
-    

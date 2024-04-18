@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import *
-from datetime import datetime
+from datetime import datetime, timedelta
 
 def main_index(request):
     return render(request, "chart/index.html")
@@ -115,3 +115,35 @@ def subthink_chart(request):
         
     context = {'columns' : columns, 'posts': participants_ordered_posts_lst, 'site_name': '국민 생각함'}
     return render(request, "chart/uniform_charts.html", context)
+
+def search_main(request):
+    current_date = datetime.now().date()
+    year_date = current_date - timedelta(days=365)
+
+    context = {
+        'current_date' : current_date,
+        'year_date' : year_date
+    }
+
+    return render(request, "chart/search.html", context)
+
+def search_result(request):
+    current_date = datetime.now().date()
+    year_date = current_date - timedelta(days=365)
+
+    title = request.GET.get('title')
+    s_date = request.GET.get('s_date')
+    e_date = request.GET.get('e_date')
+    title_list = Congress.objects.filter(title__contains=title)
+
+    title_list = title_list.filter(pub_date__range=[s_date, e_date])
+
+    title_list = title_list.order_by("-pub_date")
+
+    context = {
+        'title' : title,
+        'posts': title_list,
+        'current_date' : e_date,
+        'year_date' : s_date
+    }
+    return render(request, "chart/search_result.html", context)
