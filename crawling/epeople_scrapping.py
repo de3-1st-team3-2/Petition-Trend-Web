@@ -226,3 +226,19 @@ if __name__ == "__main__":
     import json
     with open(f"./crawling_data_{start_date.strftime("%Y-%m-%d")}_{end_date.strftime("%Y-%m-%d")}.json", "w", encoding='utf-8') as f:
         json.dump(crawling_result_dict, f, ensure_ascii=False, indent=4)
+    
+
+    total_list = []
+    for k, v in crawling_result_dict.items():
+        new_dict = {"model": "visualize.epeople"}
+        new_dict['fields'] = {}
+        new_dict['fields']['url'] = k
+        new_dict['fields']['title'] = v['제목']
+        new_dict['fields']['agency'] = v['처리 기관']
+        new_dict['fields']['pub_date'] = v['신청일']
+        new_dict['fields']['status'] = v['추진상황']
+        new_dict['fields']['views'] = int(v['조회'])
+        new_dict['fields']['rating'] = float(v['별점']) if v['별점'] != '-' else 0
+        new_dict['fields']['field'] = v['분야']
+        new_dict['fields']['content'] = v['내용']
+        total_list.append(new_dict)
