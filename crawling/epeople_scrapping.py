@@ -42,8 +42,10 @@ def set_search_period(driver, start_date, end_date):
         start_date: datetime.datetime 객체이어야 합니다.
         end_date: datetime.datetime 객체이어야 합니다.
     """
+    start_date_str = start_date.strftime("%Y-%m-%d")
+    end_date_str = end_date.strftime("%Y-%m-%d")
     print(f"search period: \n\
-          start: {start_date.strftime("%Y-%m-%d")} \t end: {end_date.strftime("%Y-%m-%d")}")
+          start: {start_date_str} \t end: {end_date_str}")
     start_date_input = driver.find_element(By.ID, "rqstStDt")
     end_date_input = driver.find_element(By.ID, "rqstEndDt")
 
@@ -222,9 +224,11 @@ if __name__ == "__main__":
     start_date = datetime(2024, 1, 1)
 
     crawling_result_dict = epeople_crawling(start_date, end_date)
-
+    
+    start_date_str = start_date.strftime("%Y-%m-%d")
+    end_date_str = end_date.strftime("%Y-%m-%d")
     import json
-    with open(f"./crawling_data_{start_date.strftime("%Y-%m-%d")}_{end_date.strftime("%Y-%m-%d")}.json", "w", encoding='utf-8') as f:
+    with open(f"./crawling_data_{start_date_str}_{end_date_str}.json", "w", encoding='utf-8') as f:
         json.dump(crawling_result_dict, f, ensure_ascii=False, indent=4)
     
 
