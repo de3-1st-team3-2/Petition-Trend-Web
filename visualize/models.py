@@ -51,7 +51,6 @@ class CW24(models.Model):
     comment_num = models.IntegerField(null = True, verbose_name="댓글수")
     result = models.CharField(max_length=300, null = True, verbose_name="처리결과")
 
-
     def __str__(self):
         return f"제목: {self.title}, 작성일: {self.pub_date}, 추진상황: {self.status}"
     
