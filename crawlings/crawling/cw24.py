@@ -199,7 +199,7 @@ for data_num_ in range(data_num):
     CW24.append(data)
 #json파일로 dict 저장
 
-with open("./CW24_scrapping.json", "w", encoding='utf-8') as f:
+with open("./crawling_cw24.json", "w", encoding='utf-8') as f:
     json.dump(CW24, f, ensure_ascii=False, indent=4)
 # with open("./CW24_scrapping.json", "w", encoding='utf-8') as f:
 #     json.dump(CW24, f, ensure_ascii=False, indent=4)

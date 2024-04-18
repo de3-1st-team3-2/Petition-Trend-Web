@@ -1,18 +1,16 @@
-import subprocess
-import models
+
 import os
 
+os.system('python crawlings//crawling//ideaseoul.py')
+os.system('python crawlings//crawling//cw24.py')
+os.system('python crawlings//crawling//epeople.py')
+os.system('python crawlings//crawling//petition.py')
 
-
-subprocess.run(['python', 'crawlings\\crawling_idea.py'])
-subprocess.run(['python', 'crawlings\\epeople_scrapping.py'])
-subprocess.run(['python', 'crawlings\\petition_crwaling.py'])
-subprocess.run(['python', 'crawlings\\crawling_cw24.py'])
 
 def load_data(json_file):
 
     # loaddata 명령 실행
-    subprocess.run(['python', 'manage.py', 'loaddata', json_file])
+    os.system('python manage.py loaddata '+ json_file)
 
 
 
