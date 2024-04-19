@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import *
 from datetime import datetime, timedelta
+<<<<<<< Updated upstream
 from wordcloud import WordCloud
 from django.http import HttpResponse
 import visualization_data_store.models
@@ -27,6 +28,32 @@ def generate_wordcloud(request):
 def main_index(request):
     
     return render(request, "chart/index.html")
+=======
+from visualization_data_store.models import *
+from django.db.models import Sum
+
+def main_index(request):
+    da = MonthlySitewiseWordCount.objects.filter(date='2024-03-01 00:00:00')
+    temp = []
+    for d in da:
+        found = False
+        for item in temp:
+            if item['word'] == d.word:
+                item['wordcnt'] += d.cnt
+                found = True
+                break
+        if not found:
+            temp.append({'word': d.word, 'wordcnt': d.cnt})
+
+    word = []
+    wordcnt = []
+    for d in temp:
+        if d['wordcnt'] != 1:
+            word.append(d['word'])
+            wordcnt.append(d['wordcnt']) 
+    context = {'word': word, 'wordcnt': wordcnt}
+    return render(request, "chart/index.html", context)
+>>>>>>> Stashed changes
 
 def get_monthly_site_writes(site):
     if site == 'total':

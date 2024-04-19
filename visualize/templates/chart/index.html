@@ -67,6 +67,18 @@
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item active">Dashboard</li>
                         </ol>
+                            
+                        <div class="card mb-4">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-area me-1"></i>
+                                    Word Cloud
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="mywordcloud" width="100%" height="400px"></canvas>
+                                </div>
+                                <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                        </div>
+
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="card mb-4">
@@ -103,8 +115,59 @@
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
         <script src="{% static 'assets/demo/chart-area-demo.js' %}"></script>
         <script src="{% static 'assets/demo/chart-bar-demo.js' %}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-wordcloud"></script>
+        <script src="{% static 'js/chart-wordcloud.js' %}"></script>
         <script src="{% static 'js/scripts.js' %}"></script>
         <script src="{% static 'js/datatables-simple-demo.js' %}"></script>
+        {{ word | json_script:"word" }}
+        {{ wordcnt | json_script:"wordcnt" }}
+        <script>
+            var word = JSON.parse(document.getElementById('word').textContent);
+            var wordcnt = JSON.parse(document.getElementById('wordcnt').textContent);
+            window.onload = () => {
+                
+                var ctx = document.getElementById('mywordcloud');
+                window.myBar = new Chart(ctx, {
+                    type: 'wordCloud',
+                    data: {
+                        // text
+                        labels: word,
+                        datasets: [
+                        {
+                            label: 'DS',
+                            // size in pixel
+                            data: wordcnt
+                        },
+                        ],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        title: {
+                            display: false,
+                            text: 'Chart.js Word Cloud',
+                        },
+                        plugins: {
+                            legend: {
+                                display: false,
+                            },
+                        },
+                    },
+                });
+                // 차트 크기 업데이트 함수
+                function updateChartSize() {
+                    const container = document.getElementById('container');
+                    ctx.style.width = container.clientWidth + 'px';
+                    ctx.style.height = container.clientHeight + 'px';
+                    window.myBar.resize();
+                }
+                // 초기 차트 크기 설정
+                updateChartSize();
+                // 창 크기 변경 시 차트 크기 업데이트
+                window.addEventListener('resize', updateChartSize);
+            };
+        </script>
     </body>
     </body>
 </html>

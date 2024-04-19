@@ -44,7 +44,7 @@ class CW24(models.Model):
     content = models.CharField(null = True, max_length=300, verbose_name="내용")
     comment_num = models.IntegerField(null = True, verbose_name="댓글수")
     result = models.CharField(max_length=300, null = True, verbose_name="처리결과")
-    
+
 class SubThink(models.Model):
     title = models.CharField(max_length=50, verbose_name="제목")
     url = models.CharField(max_length=200, verbose_name="URL")
