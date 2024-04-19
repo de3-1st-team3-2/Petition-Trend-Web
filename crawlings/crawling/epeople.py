@@ -245,5 +245,5 @@ if __name__ == "__main__":
         new_dict['fields']['content'] = v['내용']
         total_list.append(new_dict)
     import json
-    with open(f"./crawling_data_{start_date_str}_{end_date_str}.json", "w", encoding='utf-8') as f:
-        json.dump(crawling_result_dict, f, ensure_ascii=False, indent=4)
+    with open(f"./crawling_epeople.json", "w", encoding='utf-8') as f:
+        json.dump(total_list, f, ensure_ascii=False, indent=4)
