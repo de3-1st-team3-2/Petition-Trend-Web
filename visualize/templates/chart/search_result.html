@@ -78,6 +78,13 @@
                                 <input type="date" id="s_date" name="s_date" value="{{year_date}}">
                                 <input type="date" id="e_date" name="e_date" value="{{current_date}}">
                             </label>
+                            <br>
+                            <label>사이트 :</label>
+                            <label><input type="checkbox" id="site1" name="site1" {% if site1 %}checked{%endif%}> 국민 신문고</label>
+                            <label><input type="checkbox" id="site2" name="site2" {% if site2 %}checked{%endif%}> 국민동의청원</label>
+                            <label><input type="checkbox" id="site3" name="site3" {% if site3 %}checked{%endif%}> 청원24</label>
+                            <label><input type="checkbox" id="site4" name="site4" {% if site4 %}checked{%endif%}> 상상대로 서울</label>
+                            <label><input type="checkbox" id="site5" name="site5" {% if site5 %}checked{%endif%}> 국민 생각함</label>
                             <label><input type="submit" value="검색"></label>
                         </form>
                     </div>
@@ -94,22 +101,16 @@
                                 <thead>
                                     <tr>
                                         <th>제목</th>
-                                        <th>처리기관</th>
-                                        <th>분야</th>
                                         <th>작성일</th>
-                                        <th>처리상태</th>
-                                        <th>동의수</th>
+                                        <th>출저</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for post in posts %}
                                         <tr>
                                             <td><a href="{{post.url}}" style="text-decoration-line: none">{{post.title}}</a></td>
-                                            <td>{{post.agency}}</td>
-                                            <td>{{post.category}}</td>
                                             <td>{{post.pub_date|date:"Y-m-d"}}</td>
-                                            <td>{{post.status}}</td>
-                                            <td>{{post.rating}}</td>
+                                            <td>{{post.where}}</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
