@@ -3,12 +3,13 @@ from .models import *
 from datetime import datetime, timedelta
 from wordcloud import WordCloud
 from django.http import HttpResponse
+import visualization_data_store.models
 def generate_wordcloud(request):
     # 각 사이트에 해당하는 모델을 선택합니다.
 
 
     # 모델에서 필요한 데이터를 가져옵니다.
-    texts = Epeople.objects.values_list('title', flat=True)
+    texts = visualization_data_store.models.MonthlySitewiseWordCount.objects.values_list('word', flat=True)
     text = ' '.join(texts)
     
     # WordCloud 객체를 생성하고, generate_from_text() 함수를 사용하여 워드클라우드를 생성합니다.
