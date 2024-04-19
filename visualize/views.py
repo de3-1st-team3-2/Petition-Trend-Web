@@ -42,15 +42,17 @@ def get_monthly_site_writes(site):
             data_labels.append(data)
         return bar_labels, data_labels
 
-
-
-def epeople_chart(request):
+def get_detail_chart_search_period(request):
     s_date = request.GET.get('s_date')
     e_date = request.GET.get('e_date')
     if s_date is None or e_date is None:
         e_date = datetime.now().date()
-        s_date = e_date - timedelta(days=30)
+        s_date = (e_date - timedelta(days=30)).strftime("%Y-%m-%d")
+        e_date = e_date.strftime("%Y-%m-%d")
+    return s_date, e_date
 
+def epeople_chart(request):
+    s_date, e_date = get_detail_chart_search_period(request)
     order_by = request.GET.get("order-by")
     if order_by == 'rating':
         view_ordered_posts = Epeople.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-rating")[:10]
@@ -81,8 +83,9 @@ def epeople_chart(request):
     return render(request, "chart/uniform_charts.html", context)
 
 def congress_chart(request):
+    s_date, e_date = get_detail_chart_search_period(request)
     order_by = request.GET.get("order-by")
-    view_ordered_posts = Congress.objects.order_by("-rating")[:10]
+    view_ordered_posts = Congress.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-rating")[:10]
 
     columns = ['제목', '처리기관', '분야', '작성일', '처리상태', '동의수']
     view_ordered_posts_lst = []
@@ -100,11 +103,14 @@ def congress_chart(request):
     bar_labels, bar_datas = get_monthly_site_writes("congress")
     context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '국회 국민 동의 청원',
                'bar_labels': bar_labels, 'bar_datas': bar_datas}
+    context['year_date'] = s_date
+    context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
 
 
 def cw24_chart(request):
-    view_ordered_posts = CW24.objects.order_by("-views")[:10]
+    s_date, e_date = get_detail_chart_search_period(request)
+    view_ordered_posts = CW24.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-views")[:10]
 
     columns = ['제목', '처리기관', '추진상황', '작성일', '기간', '조회수', '댓글수']
     view_ordered_posts_lst = []
@@ -126,11 +132,14 @@ def cw24_chart(request):
     bar_labels, bar_datas = get_monthly_site_writes("cw24")
     context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '청원 24',
                'bar_labels': bar_labels, 'bar_datas': bar_datas}
+    context['year_date'] = s_date
+    context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
 
 def ideaseoul_chart(request):
+    s_date, e_date = get_detail_chart_search_period(request)
     order_by = request.GET.get("order-by")
-    view_ordered_posts = Ideaseoul.objects.order_by("-views")[:10]
+    view_ordered_posts = Ideaseoul.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-views")[:10]
 
     columns = ['제목', '분야', '작성일', '기간', '처리상태', '조회수']
     view_ordered_posts_lst = []
@@ -148,10 +157,13 @@ def ideaseoul_chart(request):
     bar_labels, bar_datas = get_monthly_site_writes("ideaseoul")
     context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '상상대로 서울',
                'bar_labels': bar_labels, 'bar_datas': bar_datas}
+    context['year_date'] = s_date
+    context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
 
 def subthink_chart(request):
-    participants_ordered_posts = SubThink.objects.order_by("-participants")[:10]
+    s_date, e_date = get_detail_chart_search_period(request)
+    participants_ordered_posts = SubThink.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-participants")[:10]
 
 
     columns = ['제목', '작성일', '기간', '참여자수', '추천/비추천']
@@ -171,6 +183,8 @@ def subthink_chart(request):
     bar_labels, bar_datas = get_monthly_site_writes("subthink")
     context = {'columns' : columns, 'posts': participants_ordered_posts_lst, 'site_name': '국민 생각함',
                'bar_labels': bar_labels, 'bar_datas': bar_datas}
+    context['year_date'] = s_date
+    context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
 
 def search_main(request):
