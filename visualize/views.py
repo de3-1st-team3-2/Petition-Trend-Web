@@ -33,7 +33,7 @@ def get_monthly_site_writes(site):
         pass
     else:
         current_month_start = datetime(2023,1,1)
-        monthly_writes_lst = MonthlySitewiseWrites.objects.values_list("date", site).filter(date__gte=current_month_start)
+        monthly_writes_lst = visualization_data_store.models.MonthlySitewiseWrites.objects.values_list("date", site).filter(date__gte=current_month_start)
         bar_labels = []
         data_labels = []
         for label, data in monthly_writes_lst:
