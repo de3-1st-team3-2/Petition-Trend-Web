@@ -58,24 +58,35 @@ def get_detail_chart_search_period(request):
 
     #임시로 기간 설정
 
-date=datetime(2024,3,1)
-def get_total_site_petition_num(date):
+
+def get_total_site_petition_num(s_date,e_date):
     #파이에 관한 데이터
 
-    monthly_data_dict=visualization_data_store.models.MonthlySitewiseWrites.objects.filter(date=date).values()
+    monthly_data_dict=visualization_data_store.models.MonthlySitewiseWrites.objects.filter(date__gte=s_date,date__lte=e_date).values()
     #labels : 각 사이트명 담겨야함
     #datas : 각 사이트 값 담겨야함
-    
-    pie_labels=[]
-    pie_datas=[]
-    
+    pie_labels = [x.name for x in visualization_data_store.models.MonthlySitewiseWrites._meta.get_fields() if x.name not in ['id', 'date']]
+    pie_datas=[0 for x in range(len(pie_labels))]
     for item in monthly_data_dict :
         for x in item:
-            if x == "id" or x =="date":
+            if x =='id' or x =="date":
                 pass
             else :
-                pie_labels.append(x)
-                pie_datas.append(item[x])
+                index=pie_labels.index(x) 
+                pie_datas[index]+=item[x]
+
+                
+    
+    # pie_labels=[monthly_data_dict[0].keys()]
+    # pie_datas=[]
+    
+    # for item in monthly_data_dict :
+    #     for x in item: #x=key item[key]=va
+    #         if x == "id" or x =="date":
+    #             pass
+    #         else :
+    #             pie_labels.append(x)
+    #             pie_datas.append(item[x])
 
 
     return pie_labels,pie_datas
@@ -103,7 +114,7 @@ def epeople_chart(request):
         view_ordered_posts_lst.append(result_lst)
         
 
-    pie_labels, pie_datas = get_total_site_petition_num(date)
+    pie_labels, pie_datas = get_total_site_petition_num(s_date,e_date)
     bar_labels, bar_datas = get_monthly_site_writes("epeople")
                
     context = {'columns': columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고', 'wordcloud_url': '/generate_wordcloud/epeople','bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
@@ -129,7 +140,7 @@ def congress_chart(request):
         result_lst.append(elem.rating)
         view_ordered_posts_lst.append(result_lst)
     
-    pie_labels, pie_datas = get_total_site_petition_num(date)
+    pie_labels, pie_datas = get_total_site_petition_num(s_date,e_date)
     bar_labels, bar_datas = get_monthly_site_writes("congress")
     context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '국회 국민 동의 청원','wordcloud_url': '/generate_wordcloud/congress',
                'bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
@@ -159,7 +170,7 @@ def cw24_chart(request):
         result_lst.append(elem.comment_num)
         view_ordered_posts_lst.append(result_lst)
     #파이 데이터
-    pie_labels,pie_datas=get_total_site_petition_num(date)
+    pie_labels,pie_datas=get_total_site_petition_num(s_date,e_date)
         
     bar_labels, bar_datas = get_monthly_site_writes("cw24")
     context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '청원 24','wordcloud_url': '/generate_wordcloud/cw24',
@@ -186,7 +197,7 @@ def ideaseoul_chart(request):
         result_lst.append(elem.views)
         view_ordered_posts_lst.append(result_lst)
     #파이 데이터
-    pie_labels,pie_datas=get_total_site_petition_num(date)
+    pie_labels,pie_datas=get_total_site_petition_num(s_date,e_date)
         
     bar_labels, bar_datas = get_monthly_site_writes("ideaseoul")
     context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '상상대로 서울','wordcloud_url': '/generate_wordcloud/ideaseoul',
@@ -214,7 +225,7 @@ def subthink_chart(request):
         result_lst.append(f"{elem.recommends}/{elem.no_recommends}")
         participants_ordered_posts_lst.append(result_lst)
     
-    pie_labels, pie_datas = get_total_site_petition_num(date)
+    pie_labels, pie_datas = get_total_site_petition_num(s_date,e_date)
     bar_labels, bar_datas = get_monthly_site_writes("subthink")
     context = {'columns' : columns, 'posts': participants_ordered_posts_lst, 'site_name': '국민 생각함','wordcloud_url': '/generate_wordcloud/sub-think',
                'bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
