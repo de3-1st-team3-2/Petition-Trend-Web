@@ -67,6 +67,19 @@
                             <li class="breadcrumb-item"><a href="/">메인</a></li>
                             <li class="breadcrumb-item active">{{ site_name }}</li>
                         </ol>
+                        <div class="card mb-1">
+                            <div class="card-header">
+                                <i class="fas fa-calendar-alt"></i>
+                                검색 기간
+                            </div>
+                            <form action="/epeople/" method="get">
+                                <label>
+                                    <input type="date" id="s_date" name="s_date" value="{{year_date}}">
+                                    <input type="date" id="e_date" name="e_date" value="{{current_date}}">
+                                </label>
+                                <label><input type="submit" value="검색"></label>
+                            </form>
+                        </div>
                         <div class="card mb-4">
                             <div class="card-header">
                                 <i class="fas fa-chart-area me-1"></i>
