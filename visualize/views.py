@@ -16,8 +16,9 @@ def generate_wordcloud(request):
     # WordCloud 객체를 생성하고, generate_from_text() 함수를 사용하여 워드클라우드를 생성합니다.
     font_path = "C:\Windows\Fonts\gulim.ttc"
     wordcloud = WordCloud(font_path=font_path,prefer_horizontal=2.0, background_color='white', width=800, height=400).generate_from_text(text)
-    print(text)
+
     # 워드클라우드 이미지를 HttpResponse 객체로 반환합니다.
+    bar_labels, bar_datas = get_monthly_site_writes("epeople")
     response = HttpResponse(content_type="image/png")
     wordcloud.to_image().save(response, "PNG")
     
@@ -68,7 +69,8 @@ def epeople_chart(request):
 
 
     bar_labels, bar_datas = get_monthly_site_writes("epeople")
-    context = {'columns': columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고', 'wordcloud_url': '/generate_wordcloud'}
+               
+    context = {'columns': columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고', 'wordcloud_url': '/generate_wordcloud','bar_labels': bar_labels, 'bar_datas': bar_datas}
 
     return render(request, "chart/uniform_charts.html", context)
 
