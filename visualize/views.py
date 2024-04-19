@@ -45,12 +45,17 @@ def get_monthly_site_writes(site):
 
 
 def epeople_chart(request):
-    current_month_start = datetime(datetime.now().year, datetime.now().month, 1)
+    s_date = request.GET.get('s_date')
+    e_date = request.GET.get('e_date')
+    if s_date is None or e_date is None:
+        e_date = datetime.now().date()
+        s_date = e_date - timedelta(days=30)
+
     order_by = request.GET.get("order-by")
     if order_by == 'rating':
-        view_ordered_posts = Epeople.objects.filter(pub_date__gte=current_month_start).order_by("-rating")[:10]
+        view_ordered_posts = Epeople.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-rating")[:10]
     else:
-        view_ordered_posts = Epeople.objects.filter(pub_date__gte=current_month_start).order_by("-views")[:10]
+        view_ordered_posts = Epeople.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-views")[:10]
 
     columns = ['제목', '처리기관', '분야', '작성일', '처리상태', '조회수', '별점']
     view_ordered_posts_lst = []
@@ -71,7 +76,8 @@ def epeople_chart(request):
     bar_labels, bar_datas = get_monthly_site_writes("epeople")
                
     context = {'columns': columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고', 'wordcloud_url': '/generate_wordcloud','bar_labels': bar_labels, 'bar_datas': bar_datas}
-
+    context['year_date'] = s_date
+    context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
 
 def congress_chart(request):
