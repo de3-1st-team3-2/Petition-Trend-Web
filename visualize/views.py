@@ -76,7 +76,7 @@ def epeople_chart(request):
 
     bar_labels, bar_datas = get_monthly_site_writes("epeople")
                
-    context = {'columns': columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고', 'wordcloud_url': '/generate_wordcloud','bar_labels': bar_labels, 'bar_datas': bar_datas}
+    context = {'columns': columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고', 'wordcloud_url': '/generate_wordcloud/epeople','bar_labels': bar_labels, 'bar_datas': bar_datas}
     context['year_date'] = s_date
     context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
