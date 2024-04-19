@@ -1,9 +1,9 @@
+
 import requests
 from bs4 import BeautifulSoup
 
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
-}
+header={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"}
+
 # 동의 진행중인 청원들에 대해서는 pageIndex 1~4까지
 # https://petitions.assembly.go.kr/api/petits?pageIndex=1&recordCountPerPage=8&sort=AGRE_CO-&searchCondition=&searchKeyword=&petitRealmCode=&sttusCode=AGRE_PROGRS,CMIT_FRWRD,PETIT_FORMATN&proceedAt=proceed&beginDate=&endDate=&ageCd=
 # 동의 완료 url pageIndex 1~120
@@ -54,5 +54,5 @@ for data in DB:
   new_data["fields"] = data
   new_list.append(new_data)
 
-with open("./crawling_data.json", "w", encoding='utf-8') as f:
+with open("./crawling_petition.json", "w", encoding='utf-8') as f:
     json.dump(new_list, f, ensure_ascii=False, indent=2)
