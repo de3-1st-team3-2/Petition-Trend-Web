@@ -18,4 +18,8 @@ def load_data(json_file):
 load_data('crawling_ideaseoul.json')
 load_data('crawling_epeople.json')
 load_data('crawling_petition.json')
+<<<<<<< HEAD
 load_data('crawling_cw24.json')
+=======
+load_data('crawling_cw24.json')
+>>>>>>> e89249657016e6edd1c9fa4db2bf0d45ffe8db37

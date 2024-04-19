@@ -55,6 +55,32 @@ def get_detail_chart_search_period(request):
         e_date = e_date.strftime("%Y-%m-%d")
     return s_date, e_date
 
+
+    #임시로 기간 설정
+date=datetime(2024,3,1)
+def get_total_site_petition_num(date):
+    #파이에 관한 데이터
+
+    monthly_data_dict=MonthlySitewiseWrites.objects.filter(date=date).values()
+    #labels : 각 사이트명 담겨야함
+    #datas : 각 사이트 값 담겨야함
+    
+    pie_labels=[]
+    pie_datas=[]
+    
+    for item in monthly_data_dict :
+        for x in item:
+            if x == "id" or x =="date":
+                pass
+            else :
+                pie_labels.append(x)
+                pie_datas.append(item[x])
+
+    print(pie_labels,pie_datas)
+
+
+    return pie_labels,pie_datas
+
 def epeople_chart(request):
     s_date, e_date = get_detail_chart_search_period(request)
     order_by = request.GET.get("order-by")
@@ -81,7 +107,7 @@ def epeople_chart(request):
 
     bar_labels, bar_datas = get_monthly_site_writes("epeople")
                
-    context = {'columns': columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고', 'wordcloud_url': '/generate_wordcloud/epeople','bar_labels': bar_labels, 'bar_datas': bar_datas}
+    context = {'columns': columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고', 'wordcloud_url': '/generate_wordcloud/epeople','bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
     context['year_date'] = s_date
     context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
@@ -106,7 +132,7 @@ def congress_chart(request):
     
     bar_labels, bar_datas = get_monthly_site_writes("congress")
     context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '국회 국민 동의 청원','wordcloud_url': '/generate_wordcloud/congress',
-               'bar_labels': bar_labels, 'bar_datas': bar_datas}
+               'bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
     context['year_date'] = s_date
     context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
@@ -132,10 +158,12 @@ def cw24_chart(request):
         result_lst.append(elem.views)
         result_lst.append(elem.comment_num)
         view_ordered_posts_lst.append(result_lst)
+    #파이 데이터
+    pie_labels,pie_datas=get_total_site_petition_num(date)
         
     bar_labels, bar_datas = get_monthly_site_writes("cw24")
     context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '청원 24','wordcloud_url': '/generate_wordcloud/cw24',
-               'bar_labels': bar_labels, 'bar_datas': bar_datas}
+               'bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
     context['year_date'] = s_date
     context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
@@ -157,10 +185,12 @@ def ideaseoul_chart(request):
         result_lst.append(elem.status)
         result_lst.append(elem.views)
         view_ordered_posts_lst.append(result_lst)
+    #파이 데이터
+    pie_labels,pie_datas=get_total_site_petition_num(date)
         
     bar_labels, bar_datas = get_monthly_site_writes("ideaseoul")
     context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '상상대로 서울','wordcloud_url': '/generate_wordcloud/ideaseoul',
-               'bar_labels': bar_labels, 'bar_datas': bar_datas}
+               'bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
     context['year_date'] = s_date
     context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
@@ -186,7 +216,7 @@ def subthink_chart(request):
     
     bar_labels, bar_datas = get_monthly_site_writes("subthink")
     context = {'columns' : columns, 'posts': participants_ordered_posts_lst, 'site_name': '국민 생각함','wordcloud_url': '/generate_wordcloud/sub-think',
-               'bar_labels': bar_labels, 'bar_datas': bar_datas}
+               'bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
     context['year_date'] = s_date
     context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
