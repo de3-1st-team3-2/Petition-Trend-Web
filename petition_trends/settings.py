@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crawlings',
-    'visualize'
+    'visualize',
+    'visualization_data_store'
 ]
 
 MIDDLEWARE = [
