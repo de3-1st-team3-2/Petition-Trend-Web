@@ -8,10 +8,10 @@ def main_index(request):
     return render(request, "chart/index.html")
 
 def get_monthly_site_writes(site):
-    current_month_start = datetime(2023,1,1)
     if site == 'total':
         pass
     else:
+        current_month_start = datetime(2023,1,1)
         monthly_writes_lst = MonthlySitewiseWrites.objects.values_list("date", site).filter(date__gte=current_month_start)
         bar_labels = []
         data_labels = []
