@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from wordcloud import WordCloud
 from django.http import HttpResponse
 import visualization_data_store.models
+
 def generate_wordcloud(request):
     # 각 사이트에 해당하는 모델을 선택합니다.
 
@@ -22,9 +23,24 @@ def generate_wordcloud(request):
     
     return response
 
+
 def main_index(request):
     
     return render(request, "chart/index.html")
+
+def get_monthly_site_writes(site):
+    if site == 'total':
+        pass
+    else:
+        current_month_start = datetime(2023,1,1)
+        monthly_writes_lst = MonthlySitewiseWrites.objects.values_list("date", site).filter(date__gte=current_month_start)
+        bar_labels = []
+        data_labels = []
+        for label, data in monthly_writes_lst:
+            bar_labels.append(label.strftime("%Y-%m-%d"))
+            data_labels.append(data)
+        return bar_labels, data_labels
+
 
 
 def epeople_chart(request):
@@ -50,7 +66,10 @@ def epeople_chart(request):
         view_ordered_posts_lst.append(result_lst)
         
 
+
+    bar_labels, bar_datas = get_monthly_site_writes("epeople")
     context = {'columns': columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고', 'wordcloud_url': '/generate_wordcloud'}
+
     return render(request, "chart/uniform_charts.html", context)
 
 def congress_chart(request):
@@ -69,8 +88,10 @@ def congress_chart(request):
         result_lst.append(elem.status)
         result_lst.append(elem.rating)
         view_ordered_posts_lst.append(result_lst)
-        
-    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '국회 국민 동의 청원'}
+    
+    bar_labels, bar_datas = get_monthly_site_writes("congress")
+    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '국회 국민 동의 청원',
+               'bar_labels': bar_labels, 'bar_datas': bar_datas}
     return render(request, "chart/uniform_charts.html", context)
 
 
@@ -94,7 +115,9 @@ def cw24_chart(request):
         result_lst.append(elem.comment_num)
         view_ordered_posts_lst.append(result_lst)
         
-    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '청원 24'}
+    bar_labels, bar_datas = get_monthly_site_writes("cw24")
+    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '청원 24',
+               'bar_labels': bar_labels, 'bar_datas': bar_datas}
     return render(request, "chart/uniform_charts.html", context)
 
 def ideaseoul_chart(request):
@@ -114,7 +137,9 @@ def ideaseoul_chart(request):
         result_lst.append(elem.views)
         view_ordered_posts_lst.append(result_lst)
         
-    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '상상대로 서울'}
+    bar_labels, bar_datas = get_monthly_site_writes("ideaseoul")
+    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '상상대로 서울',
+               'bar_labels': bar_labels, 'bar_datas': bar_datas}
     return render(request, "chart/uniform_charts.html", context)
 
 def subthink_chart(request):
@@ -134,8 +159,10 @@ def subthink_chart(request):
         result_lst.append(elem.participants)
         result_lst.append(f"{elem.recommends}/{elem.no_recommends}")
         participants_ordered_posts_lst.append(result_lst)
-        
-    context = {'columns' : columns, 'posts': participants_ordered_posts_lst, 'site_name': '국민 생각함'}
+    
+    bar_labels, bar_datas = get_monthly_site_writes("subthink")
+    context = {'columns' : columns, 'posts': participants_ordered_posts_lst, 'site_name': '국민 생각함',
+               'bar_labels': bar_labels, 'bar_datas': bar_datas}
     return render(request, "chart/uniform_charts.html", context)
 
 def search_main(request):
