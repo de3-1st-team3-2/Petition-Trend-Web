@@ -65,28 +65,15 @@ def get_total_site_petition_num(s_date,e_date):
     monthly_data_dict=visualization_data_store.models.MonthlySitewiseWrites.objects.filter(date__gte=s_date,date__lte=e_date).values()
     #labels : 각 사이트명 담겨야함
     #datas : 각 사이트 값 담겨야함
-    pie_labels = [x.name for x in visualization_data_store.models.MonthlySitewiseWrites._meta.get_fields() if x.name not in ['id', 'date']]
+    pie_labels = [x.name for x in visualization_data_store.models.MonthlySitewiseWrites._meta.get_fields() if x.name not in ['id', 'date']] #데이터안 사이트명만 가져옴
     pie_datas=[0 for x in range(len(pie_labels))]
-    for item in monthly_data_dict :
-        for x in item:
+    for item in monthly_data_dict : #쿼리셋들 순회
+        for x in item: #쿼리셋 내부 데이터 항목 순회
             if x =='id' or x =="date":
                 pass
             else :
                 index=pie_labels.index(x) 
                 pie_datas[index]+=item[x]
-
-                
-    
-    # pie_labels=[monthly_data_dict[0].keys()]
-    # pie_datas=[]
-    
-    # for item in monthly_data_dict :
-    #     for x in item: #x=key item[key]=va
-    #         if x == "id" or x =="date":
-    #             pass
-    #         else :
-    #             pie_labels.append(x)
-    #             pie_datas.append(item[x])
 
 
     return pie_labels,pie_datas
