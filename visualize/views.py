@@ -161,7 +161,7 @@ def subthink_chart(request):
         result_lst.append(f"{elem.recommends}/{elem.no_recommends}")
         participants_ordered_posts_lst.append(result_lst)
     
-    bar_labels, bar_datas = get_monthly_site_writes("subthink")
+    bar_labels, bar_datas = get_monthly_site_writes("sub-think")
     context = {'columns' : columns, 'posts': participants_ordered_posts_lst, 'site_name': '국민 생각함','wordcloud_url': '/generate_wordcloud/subthink',
                'bar_labels': bar_labels, 'bar_datas': bar_datas}
     return render(request, "chart/uniform_charts.html", context)
