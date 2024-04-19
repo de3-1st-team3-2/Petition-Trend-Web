@@ -41,8 +41,9 @@ def get_monthly_site_writes(site):
         bar_labels = []
         data_labels = []
         for label, data in monthly_writes_lst:
-            bar_labels.append(label.strftime("%Y-%m-%d"))
-            data_labels.append(data)
+            if data != 0:
+                bar_labels.append(label.strftime("%Y-%m-%d"))
+                data_labels.append(data)
         return bar_labels, data_labels
 
 def get_detail_chart_search_period(request):
