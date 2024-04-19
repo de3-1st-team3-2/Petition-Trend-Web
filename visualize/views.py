@@ -7,12 +7,15 @@ import visualization_data_store.models
 
 def generate_wordcloud(request,site):
     # 각 사이트에 해당하는 모델을 선택합니다.
-
-
     # 모델에서 필요한 데이터를 가져옵니다.
-    texts = visualization_data_store.models.MonthlySitewiseWordCount.objects.filter(source=site).values_list('word', flat=True)
+    if site =='all':
+        texts = visualization_data_store.models.MonthlySitewiseWordCount.objects.values_list('word', flat=True)
+    else:
+        
+        texts = visualization_data_store.models.MonthlySitewiseWordCount.objects.filter(source=site).values_list('word', flat=True)
     text = ' '.join(texts)
     
+
     # WordCloud 객체를 생성하고, generate_from_text() 함수를 사용하여 워드클라우드를 생성합니다.
     font_path = "C:\Windows\Fonts\gulim.ttc"
     wordcloud = WordCloud(font_path=font_path,prefer_horizontal=2.0, background_color='white', width=800, height=400).generate_from_text(text)
@@ -25,8 +28,9 @@ def generate_wordcloud(request,site):
 
 
 def main_index(request):
+    context = {'site_name': '전체 청원','wordcloud_url': '/generate_wordcloud/congress'}
     
-    return render(request, "chart/index.html")
+    return render(request, "chart/index.html",context)
 
 def get_monthly_site_writes(site):
     if site == 'total':
