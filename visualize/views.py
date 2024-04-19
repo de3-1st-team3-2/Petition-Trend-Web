@@ -28,7 +28,7 @@ def generate_wordcloud(request,site):
 
 
 def main_index(request):
-    context = {'site_name': '전체 청원','wordcloud_url': '/generate_wordcloud/congress'}
+    context = {'site_name': '전체 청원','wordcloud_url': '/generate_wordcloud/congress'}#여기에 파이도 넣을 예정
     
     return render(request, "chart/index.html",context)
 
@@ -57,11 +57,12 @@ def get_detail_chart_search_period(request):
 
 
     #임시로 기간 설정
+
 date=datetime(2024,3,1)
 def get_total_site_petition_num(date):
     #파이에 관한 데이터
 
-    monthly_data_dict=MonthlySitewiseWrites.objects.filter(date=date).values()
+    monthly_data_dict=visualization_data_store.models.MonthlySitewiseWrites.objects.filter(date=date).values()
     #labels : 각 사이트명 담겨야함
     #datas : 각 사이트 값 담겨야함
     
@@ -75,8 +76,6 @@ def get_total_site_petition_num(date):
             else :
                 pie_labels.append(x)
                 pie_datas.append(item[x])
-
-    print(pie_labels,pie_datas)
 
 
     return pie_labels,pie_datas
@@ -104,7 +103,7 @@ def epeople_chart(request):
         view_ordered_posts_lst.append(result_lst)
         
 
-
+    pie_labels, pie_datas = get_total_site_petition_num(date)
     bar_labels, bar_datas = get_monthly_site_writes("epeople")
                
     context = {'columns': columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고', 'wordcloud_url': '/generate_wordcloud/epeople','bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
@@ -130,6 +129,7 @@ def congress_chart(request):
         result_lst.append(elem.rating)
         view_ordered_posts_lst.append(result_lst)
     
+    pie_labels, pie_datas = get_total_site_petition_num(date)
     bar_labels, bar_datas = get_monthly_site_writes("congress")
     context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '국회 국민 동의 청원','wordcloud_url': '/generate_wordcloud/congress',
                'bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
@@ -214,6 +214,7 @@ def subthink_chart(request):
         result_lst.append(f"{elem.recommends}/{elem.no_recommends}")
         participants_ordered_posts_lst.append(result_lst)
     
+    pie_labels, pie_datas = get_total_site_petition_num(date)
     bar_labels, bar_datas = get_monthly_site_writes("subthink")
     context = {'columns' : columns, 'posts': participants_ordered_posts_lst, 'site_name': '국민 생각함','wordcloud_url': '/generate_wordcloud/sub-think',
                'bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
