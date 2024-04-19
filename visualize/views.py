@@ -1,10 +1,31 @@
 from django.shortcuts import render
 from .models import *
 from datetime import datetime, timedelta
-from visualization_data_store.models import *
+from wordcloud import WordCloud
+from django.http import HttpResponse
+import visualization_data_store.models
+
+def generate_wordcloud(request):
+    # 각 사이트에 해당하는 모델을 선택합니다.
+
+
+    # 모델에서 필요한 데이터를 가져옵니다.
+    texts = visualization_data_store.models.MonthlySitewiseWordCount.objects.values_list('word', flat=True)
+    text = ' '.join(texts)
+    
+    # WordCloud 객체를 생성하고, generate_from_text() 함수를 사용하여 워드클라우드를 생성합니다.
+    font_path = "C:\Windows\Fonts\gulim.ttc"
+    wordcloud = WordCloud(font_path=font_path,prefer_horizontal=2.0, background_color='white', width=800, height=400).generate_from_text(text)
+    print(text)
+    # 워드클라우드 이미지를 HttpResponse 객체로 반환합니다.
+    response = HttpResponse(content_type="image/png")
+    wordcloud.to_image().save(response, "PNG")
+    
+    return response
 
 
 def main_index(request):
+    
     return render(request, "chart/index.html")
 
 def get_monthly_site_writes(site):
@@ -43,10 +64,12 @@ def epeople_chart(request):
         result_lst.append(elem.views)
         result_lst.append(elem.rating)
         view_ordered_posts_lst.append(result_lst)
+        
+
 
     bar_labels, bar_datas = get_monthly_site_writes("epeople")
-    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고',
-               'bar_labels': bar_labels, 'bar_datas': bar_datas}
+    context = {'columns': columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고', 'wordcloud_url': '/generate_wordcloud'}
+
     return render(request, "chart/uniform_charts.html", context)
 
 def congress_chart(request):
