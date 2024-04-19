@@ -1,10 +1,60 @@
 from django.shortcuts import render
 from .models import *
 from datetime import datetime, timedelta
-from visualization_data_store.models import *
+from wordcloud import WordCloud
+from django.http import HttpResponse
+import visualization_data_store.models
+
+def generate_wordcloud(request,site):
+    # 각 사이트에 해당하는 모델을 선택합니다.
+    # 모델에서 필요한 데이터를 가져옵니다.
+    if site =='all':
+        texts = visualization_data_store.models.MonthlySitewiseWordCount.objects.values_list('word', flat=True)
+    else:
+        
+        texts = visualization_data_store.models.MonthlySitewiseWordCount.objects.filter(source=site).values_list('word', flat=True)
+    text = ' '.join(texts)
+    
+
+    # WordCloud 객체를 생성하고, generate_from_text() 함수를 사용하여 워드클라우드를 생성합니다.
+    font_path = "C:\Windows\Fonts\gulim.ttc"
+    wordcloud = WordCloud(font_path=font_path,prefer_horizontal=2.0, background_color='white', width=800, height=400).generate_from_text(text)
+
+    # 워드클라우드 이미지를 HttpResponse 객체로 반환합니다.
+    response = HttpResponse(content_type="image/png")
+    wordcloud.to_image().save(response, "PNG")
+    
+    return response
+
 
 def main_index(request):
-    return render(request, "chart/index.html")
+    context = {'site_name': '전체 청원','wordcloud_url': '/generate_wordcloud/congress'}
+    
+    return render(request, "chart/index.html",context)
+
+def get_monthly_site_writes(site):
+    if site == 'total':
+        pass
+    else:
+        current_month_start = datetime(2023,1,1)
+        monthly_writes_lst = visualization_data_store.models.MonthlySitewiseWrites.objects.values_list("date", site).filter(date__gte=current_month_start)
+        bar_labels = []
+        data_labels = []
+        for label, data in monthly_writes_lst:
+            if data != 0:
+                bar_labels.append(label.strftime("%Y-%m-%d"))
+                data_labels.append(data)
+        return bar_labels, data_labels
+
+def get_detail_chart_search_period(request):
+    s_date = request.GET.get('s_date')
+    e_date = request.GET.get('e_date')
+    if s_date is None or e_date is None:
+        e_date = datetime.now().date()
+        s_date = (e_date - timedelta(days=30)).strftime("%Y-%m-%d")
+        e_date = e_date.strftime("%Y-%m-%d")
+    return s_date, e_date
+
 
     #임시로 기간 설정
 date=datetime(2024,3,1)
@@ -32,12 +82,12 @@ def get_total_site_petition_num(date):
     return pie_labels,pie_datas
 
 def epeople_chart(request):
-    current_month_start = datetime(datetime.now().year, datetime.now().month, 1)
+    s_date, e_date = get_detail_chart_search_period(request)
     order_by = request.GET.get("order-by")
     if order_by == 'rating':
-        view_ordered_posts = Epeople.objects.filter(pub_date__gte=current_month_start).order_by("-rating")[:10]
+        view_ordered_posts = Epeople.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-rating")[:10]
     else:
-        view_ordered_posts = Epeople.objects.filter(pub_date__gte=current_month_start).order_by("-views")[:10]
+        view_ordered_posts = Epeople.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-views")[:10]
 
     columns = ['제목', '처리기관', '분야', '작성일', '처리상태', '조회수', '별점']
     view_ordered_posts_lst = []
@@ -52,17 +102,20 @@ def epeople_chart(request):
         result_lst.append(elem.views)
         result_lst.append(elem.rating)
         view_ordered_posts_lst.append(result_lst)
+        
 
 
-    #파이 데이터
-    pie_labels,pie_datas=get_total_site_petition_num(date)
-
-    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고','pie_labels':pie_labels,'pie_datas':pie_datas}
+    bar_labels, bar_datas = get_monthly_site_writes("epeople")
+               
+    context = {'columns': columns, 'posts': view_ordered_posts_lst, 'site_name': '국민 신문고', 'wordcloud_url': '/generate_wordcloud/epeople','bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
+    context['year_date'] = s_date
+    context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
 
 def congress_chart(request):
+    s_date, e_date = get_detail_chart_search_period(request)
     order_by = request.GET.get("order-by")
-    view_ordered_posts = Congress.objects.order_by("-rating")[:10]
+    view_ordered_posts = Congress.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-rating")[:10]
 
     columns = ['제목', '처리기관', '분야', '작성일', '처리상태', '동의수']
     view_ordered_posts_lst = []
@@ -76,15 +129,18 @@ def congress_chart(request):
         result_lst.append(elem.status)
         result_lst.append(elem.rating)
         view_ordered_posts_lst.append(result_lst)
-    #파이 데이터
-    pie_labels,pie_datas=get_total_site_petition_num(date)
-        
-    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '국회 국민 동의 청원','pie_labels':pie_labels,'pie_datas':pie_datas}
+    
+    bar_labels, bar_datas = get_monthly_site_writes("congress")
+    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '국회 국민 동의 청원','wordcloud_url': '/generate_wordcloud/congress',
+               'bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
+    context['year_date'] = s_date
+    context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
 
 
 def cw24_chart(request):
-    view_ordered_posts = CW24.objects.order_by("-views")[:10]
+    s_date, e_date = get_detail_chart_search_period(request)
+    view_ordered_posts = CW24.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-views")[:10]
 
     columns = ['제목', '처리기관', '추진상황', '작성일', '기간', '조회수', '댓글수']
     view_ordered_posts_lst = []
@@ -105,12 +161,17 @@ def cw24_chart(request):
     #파이 데이터
     pie_labels,pie_datas=get_total_site_petition_num(date)
         
-    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '청원 24','pie_labels':pie_labels,'pie_datas':pie_datas}
+    bar_labels, bar_datas = get_monthly_site_writes("cw24")
+    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '청원 24','wordcloud_url': '/generate_wordcloud/cw24',
+               'bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
+    context['year_date'] = s_date
+    context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
 
 def ideaseoul_chart(request):
+    s_date, e_date = get_detail_chart_search_period(request)
     order_by = request.GET.get("order-by")
-    view_ordered_posts = Ideaseoul.objects.order_by("-views")[:10]
+    view_ordered_posts = Ideaseoul.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-views")[:10]
 
     columns = ['제목', '분야', '작성일', '기간', '처리상태', '조회수']
     view_ordered_posts_lst = []
@@ -127,11 +188,16 @@ def ideaseoul_chart(request):
     #파이 데이터
     pie_labels,pie_datas=get_total_site_petition_num(date)
         
-    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '상상대로 서울','pie_labels':pie_labels,'pie_datas':pie_datas}
+    bar_labels, bar_datas = get_monthly_site_writes("ideaseoul")
+    context = {'columns' : columns, 'posts': view_ordered_posts_lst, 'site_name': '상상대로 서울','wordcloud_url': '/generate_wordcloud/ideaseoul',
+               'bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
+    context['year_date'] = s_date
+    context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
 
 def subthink_chart(request):
-    participants_ordered_posts = SubThink.objects.order_by("-participants")[:10]
+    s_date, e_date = get_detail_chart_search_period(request)
+    participants_ordered_posts = SubThink.objects.filter(pub_date__gte=s_date, pub_date__lte=e_date).order_by("-participants")[:10]
 
 
     columns = ['제목', '작성일', '기간', '참여자수', '추천/비추천']
@@ -147,12 +213,12 @@ def subthink_chart(request):
         result_lst.append(elem.participants)
         result_lst.append(f"{elem.recommends}/{elem.no_recommends}")
         participants_ordered_posts_lst.append(result_lst)
-        
-
-    #파이 데이터
-    pie_labels,pie_datas=get_total_site_petition_num(date)
     
-    context = {'columns' : columns, 'posts': participants_ordered_posts_lst, 'site_name': '국민 생각함','pie_labels':pie_labels,'pie_datas':pie_datas}
+    bar_labels, bar_datas = get_monthly_site_writes("subthink")
+    context = {'columns' : columns, 'posts': participants_ordered_posts_lst, 'site_name': '국민 생각함','wordcloud_url': '/generate_wordcloud/sub-think',
+               'bar_labels': bar_labels, 'bar_datas': bar_datas,'pie_labels':pie_labels, 'pie_datas':pie_datas}
+    context['year_date'] = s_date
+    context['current_date'] = e_date
     return render(request, "chart/uniform_charts.html", context)
 
 def search_main(request):

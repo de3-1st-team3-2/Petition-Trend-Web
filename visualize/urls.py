@@ -11,4 +11,5 @@ urlpatterns = [
     path('subthink/', subthink_chart),
     path('search/', search_main),
     path('search/result/', search_result),
+    path('generate_wordcloud/<str:site>/', generate_wordcloud, name='generate_wordcloud'),
 ]
